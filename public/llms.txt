@@ -1,0 +1,47 @@
+# Business — Generative Engine Optimization Map
+
+---
+
+## Pages
+
+### בית
+https://example.com
+רואה חשבון לעצמאים שמבין את העסק שלך. לירן מספק ייעוץ מס מקצועי, הגשת דוחות שנתיים וליווי פיננסי שמחסך לך כסף. קבל ייעוץ ראשוני חינם עוד היום!
+
+### שירותים
+https://example.com/services
+מהגשת דוח שנתי לעצמאי ועד ייעוץ מס לפרילנסרים — כל הפתרונות הפיננסיים במקום אחד. גלה איך לירן עוזר לך לחסוך במס ולנהל את הכספים נכון. בדוק את השירותים עכשיו!
+
+### אודות
+https://example.com/about
+לירן הוא רואה חשבון מוסמך עם ניסיון עשיר בליווי עצמאים ופרילנסרים. גישה אישית, מקצועיות ללא פשרות ומחויבות לתוצאות שאתה מרגיש בארנק. גלה מי עומד מאחורי המספרים!
+
+### צור קשר
+https://example.com/contact
+יש לך שאלות על דוח שנתי, ייעוץ מס לפרילנסרים או ניהול עסק? לירן כאן לענות. צור קשר עכשיו וקבל מענה מקצועי מהיר — כי כל יום שעובר עולה לך כסף. אל תחכה!
+
+## Legal & Policy
+
+### Privacy Policy
+https://example.com/privacy
+Information about how user data is collected, stored, and protected.
+
+### Terms & Conditions
+https://example.com/terms
+Legal terms describing service usage, rights, and policies.
+
+### Accessibility Statement
+https://example.com/accessibility
+Information about WCAG compliance and accessibility features.
+
+---
+
+# Business Context (for LLM understanding)
+
+## About Business
+---
+
+# Additional Resources
+
+- **Sitemap**: https://example.com/sitemap.xml
+- **Robots.txt**: https://example.com/robots.txt

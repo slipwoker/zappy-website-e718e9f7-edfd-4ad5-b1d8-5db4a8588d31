@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>הכר את רואה החשבון שעובד בשבילך — לירן - רואה חשבון</title>
+    <meta name="description" content="לירן הוא רואה חשבון מוסמך עם ניסיון עשיר בליווי עצמאים ופרילנסרים. גישה אישית, מקצועיות ללא פשרות ומחויבות לתוצאות שאתה מרגיש בארנק. גלה מי עומד מאחורי המספרים!">
+    <meta name="keywords" content="רואה חשבון מוסמך, רואה חשבון לעצמאים, ייעוץ פיננסי אישי, רואה חשבון מנוסה">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: 'e718e9f7-edfd-4ad5-b1d8-5db4a8588d31',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <meta property="og:title" content="הכר את רואה החשבון שעובד בשבילך — לירן - רואה חשבון">
+    <meta property="og:description" content="לירן הוא רואה חשבון מוסמך עם ניסיון עשיר בליווי עצמאים ופרילנסרים. גישה אישית, מקצועיות ללא פשרות ומחויבות לתוצאות שאתה מרגיש בארנק. גלה מי עומד מאחורי המספרים!">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="הכר את רואה החשבון שעובד בשבילך — לירן - רואה חשבון">
+    <meta name="twitter:description" content="לירן הוא רואה חשבון מוסמך עם ניסיון עשיר בליווי עצמאים ופרילנסרים. גישה אישית, מקצועיות ללא פשרות ומחויבות לתוצאות שאתה מרגיש בארנק. גלה מי עומד מאחורי המספרים!">
+    <meta property="og:type" content="website">
+  <meta property="og:locale" content="he_IL">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+    <link rel="stylesheet" href="/styles.css">
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: var(--text-dark, #333) !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+      [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 10px !important; padding-right: 28px !important; }
+      .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus (exclude catalog sub-menus that use <a> children instead of <li>) */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))):not(:has(> a)), .sub-menu:not(:has(li)):not(:has(> a)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .navbar .sub-menu.mobile-expanded, .nav-menu .sub-menu.mobile-expanded, #navMenu .sub-menu.mobile-expanded { max-height: none !important; overflow-y: visible !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; position: relative !important; min-height: 44px !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; min-width: 0 !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; min-width: 0 !important; padding: 0 !important; line-height: inherit !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu, .navbar li:has(.sub-menu) > .sub-menu, #navMenu li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: auto !important; background: transparent !important; border: none !important; cursor: pointer !important; color: var(--text-dark) !important; position: static !important; flex-shrink: 0 !important; align-self: stretch !important; z-index: 2 !important; padding: 0 !important; margin: 0 !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; color: var(--text-dark) !important; white-space: normal !important; }
+        .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+        [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 0 !important; padding-right: 28px !important; }
+        .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+        .nav-menu.active, #navMenu.active { max-width: 100vw !important; overflow-x: hidden !important; box-sizing: border-box !important; }
+        .navbar .sub-menu li a, nav.navbar .sub-menu li a, .zappy-products-dropdown .sub-menu a { color: var(--text-dark) !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+
+    <style id="zappy-widget-visibility">
+      #mic-access-tool-general-button, .mic-access-tool-general-button,
+      #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+      ._access-icon, #mic-access-tool-box, .mic-access-tool-box,
+      #mic-init-access-tool #mic-access-tool-box, div[id*="mic-access-tool-box"], ._access-menu {
+        display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important;
+      }
+    </style>
+</head>
+<body>
+
+  <nav class="navbar" dir="rtl">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+
+  <button class="phone-header-btn" data-phone="" aria-label="Call">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+
+  <div class="nav-container">
+    <div class="nav-right-group"><div class="nav-brand">
+      <a href="/" class="logo-link">
+        <img src="/assets/logo.webp" alt="לירן - רואה חשבון" class="logo" />
+      </a>
+    </div><ul class="nav-menu" id="navMenu"><li><a href="/services">שירותים</a></li><li><a href="/about">אודות</a></li></ul></div>
+
+    
+
+    <div class="nav-cta-container">
+      <a href="/contact" class="nav-cta-btn">צור קשר</a>
+    </div>
+  </div>
+</nav>
+<script>
+
+// Navbar Mobile Menu Toggle and Contrast Fix
+(function() {
+  // Use 'load' event instead of 'DOMContentLoaded' to ensure we run AFTER all other scripts
+  window.addEventListener('load', function() {
+    
+    // FIX MOBILE BUTTON CONTRAST
+    // Detect navbar background color and apply contrasting color to mobile buttons
+    const navbar = document.querySelector('.navbar, nav, header');
+    if (!navbar) {
+      console.log('[Navbar] Navbar element not found');
+      return;
+    }
+    
+    // DECLARE VARIABLES EARLY to avoid Temporal Dead Zone errors
+    // These are used in multiple places below
+    let mobileToggle = document.getElementById('mobileToggle') ||
+                       document.querySelector('.mobile-toggle') ||
+                       document.querySelector('.hamburger') ||
+                       document.querySelector('.hamburger-menu') ||
+                       document.querySelector('.menu-toggle') ||
+                       document.querySelector('.burger-menu') ||
+                       document.querySelector('[aria-label="Menu"]') ||
+                       document.querySelector('[aria-label="תפריט"]');
+    
+    const phoneBtn = document.querySelector('.phone-header-btn');
+    
+    const computedStyle = window.getComputedStyle(navbar);
+    let bgColor = computedStyle.backgroundColor;
+    
+    console.log('[Navbar] Initial navbar background:', bgColor);
+    
+    // Check if background is transparent or rgba with 0 alpha
+    const isTransparent = bgColor === 'transparent' || 
+                         bgColor === 'rgba(0, 0, 0, 0)' ||
+                         (bgColor.startsWith('rgba') && bgColor.includes(', 0)'));
+    
+    if (isTransparent) {
+      // Check for background-image or gradient
+      const bgImage = computedStyle.backgroundImage;
+      if (bgImage && bgImage !== 'none') {
+        console.log('[Navbar] Navbar has background image/gradient, using dark text');
+        bgColor = 'rgb(240, 240, 240)'; // Assume light background
+      } else {
+        // Transparent navbar - check body background
+        const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+        console.log('[Navbar] Navbar transparent, using body background:', bodyBg);
+        bgColor = bodyBg;
+      }
+    }
+    
+    // Calculate luminance to determine if background is light or dark
+    const rgb = bgColor.match(/\d+/g);
+    if (rgb && rgb.length >= 3) {
+      const r = parseInt(rgb[0]);
+      const g = parseInt(rgb[1]);
+      const b = parseInt(rgb[2]);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      
+      // Mobile button colors are set by Claude's AI-generated CSS (same as .nav-menu a)
+      // No dynamic color overrides needed - colors come from the generated navbar CSS
+      console.log('[Navbar] Mobile button colors preserved from Claude CSS (luminance:', luminance.toFixed(2) + ')');
+      
+      // FIX ICON SIZES - Ensure SVGs are properly sized and visible
+      // INJECT CRITICAL CSS TO OVERRIDE ANY CONFLICTING RULES
+      const criticalCSS = document.createElement('style');
+      criticalCSS.id = 'zappy-mobile-nav-fix';
+      const htmlLang = document.documentElement.lang || 'en';
+      const htmlDir = document.documentElement.dir || 'ltr';
+      // Check both dir attribute AND lang for RTL detection
+      // dir="rtl" is the most reliable indicator
+      const isRTL = htmlDir === 'rtl' || htmlLang === 'he' || htmlLang === 'ar';
+      
+      criticalCSS.textContent = `
+        /* Hide mobile buttons on desktop, show only on mobile */
+        @media (min-width: 769px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            display: none !important;
+          }
+        }
+        
+        /* Show and position mobile buttons correctly on mobile */
+        @media (max-width: 768px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            position: absolute !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            z-index: 1001 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            cursor: pointer !important;
+            padding: 6px !important;
+            background: none !important;
+            color: var(--nav-text, var(--text-dark)) !important;
+          }
+          
+          /* LTR positioning (default): hamburger LEFT, phone RIGHT */
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .mobile-toggle,
+          html[dir="ltr"] .mobile-toggle {
+            left: 12px !important;
+            right: auto !important;
+          }
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .phone-header-btn,
+          html[dir="ltr"] .phone-header-btn {
+            right: 12px !important;
+            left: auto !important;
+          }
+          
+          /* RTL positioning: hamburger RIGHT, phone LEFT */
+          html[dir="rtl"] .mobile-toggle,
+          html[lang="he"] .mobile-toggle,
+          html[lang="ar"] .mobile-toggle {
+            right: 12px !important;
+            left: auto !important;
+          }
+          html[dir="rtl"] .phone-header-btn,
+          html[lang="he"] .phone-header-btn,
+          html[lang="ar"] .phone-header-btn {
+            left: 12px !important;
+            right: auto !important;
+          }
+          
+          /* CRITICAL: Ensure nav-container has min-height on mobile */
+          /* All children are positioned absolutely/fixed on mobile, so height:auto collapses to 0 */
+          .nav-container {
+            min-height: 70px !important;
+            position: relative !important;
+          }
+          
+          /* Ensure SVG icons are properly sized and inherit color */
+          .mobile-toggle svg,
+          .phone-header-btn svg {
+            width: 24px !important;
+            height: 24px !important;
+            /* Don't force display - let JavaScript control hamburger/close toggle */
+          }
+          
+          /* Reset nav-cta-container on mobile - remove desktop box-shadow/padding */
+          /* that creates a visible ghost box when CTA button is hidden */
+          .nav-cta-container {
+            box-shadow: none !important;
+            padding: 0 !important;
+          }
+          
+          /* Hide nav-cta-container entirely on mobile when there's no lang-switcher */
+          /* (only the CTA button is inside, and it's hidden on mobile) */
+          .nav-cta-container:not(:has(.lang-switcher)) {
+            display: none !important;
+          }
+          
+          /* CRITICAL: Prevent hero image fade gradient from bleeding over headline text */
+          /* The .image-fade-gradient has bottom: -30px (extends below parent) */
+          /* On mobile stacked layout, this overlaps the h1 text below the image */
+          .hero-image-column {
+            overflow: hidden !important;
+          }
+          .image-fade-gradient {
+            bottom: 0 !important;
+          }
+          
+          /* Hide desktop language switcher on mobile - hamburger menu handles it */
+          /* High specificity to override stored CSS */
+          .lang-switcher,
+          .nav-cta-container .lang-switcher,
+          .nav-container .lang-switcher,
+          .navbar .lang-switcher,
+          .navbar .nav-cta-container .lang-switcher {
+            display: none !important;
+          }
+        }
+      `;
+      
+      // Remove existing fix if present and inject new one
+      const existing = document.getElementById('zappy-mobile-nav-fix');
+      if (existing) existing.remove();
+      document.head.appendChild(criticalCSS);
+      
+      console.log('[Navbar] Critical CSS injected for mobile nav positioning');
+      
+      // ONLY apply inline positioning styles on mobile viewport
+      // On desktop, the CSS handles hiding these buttons with display: none
+      // Inline styles were breaking desktop layout by overriding CSS
+      const isMobileViewport = window.innerWidth <= 768;
+      
+      if (mobileToggle) {
+        // Icon sizing applies to all viewports for consistency
+        const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
+        const closeIcon = mobileToggle.querySelector('.close-icon');
+        
+        if (hamburgerIcon) {
+          hamburgerIcon.style.setProperty('width', '24px', 'important');
+          hamburgerIcon.style.setProperty('height', '24px', 'important');
+          hamburgerIcon.style.setProperty('display', 'block', 'important'); // Show hamburger by default
+        }
+        if (closeIcon) {
+          closeIcon.style.setProperty('width', '24px', 'important');
+          closeIcon.style.setProperty('height', '24px', 'important');
+          closeIcon.style.setProperty('display', 'none', 'important'); // Hide close icon by default
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          mobileToggle.style.setProperty('position', 'absolute', 'important');
+          mobileToggle.style.setProperty('top', '50%', 'important');
+          mobileToggle.style.setProperty('transform', 'translateY(-50%)', 'important');
+          mobileToggle.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          
+          console.log('[Navbar] Mobile toggle positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          mobileToggle.style.removeProperty('position');
+          mobileToggle.style.removeProperty('top');
+          mobileToggle.style.removeProperty('transform');
+          mobileToggle.style.removeProperty('z-index');
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared mobile toggle inline positioning');
+        }
+      }
+      
+      if (phoneBtn) {
+        // Icon sizing applies to all viewports
+        const phoneIcon = phoneBtn.querySelector('svg');
+        if (phoneIcon) {
+          phoneIcon.style.width = '24px';
+          phoneIcon.style.height = '24px';
+          phoneIcon.setAttribute('width', '24');
+          phoneIcon.setAttribute('height', '24');
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          phoneBtn.style.setProperty('position', 'absolute', 'important');
+          phoneBtn.style.setProperty('top', '50%', 'important');
+          phoneBtn.style.setProperty('transform', 'translateY(-50%)', 'important');
+          phoneBtn.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          
+          console.log('[Navbar] Phone button positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          phoneBtn.style.removeProperty('position');
+          phoneBtn.style.removeProperty('top');
+          phoneBtn.style.removeProperty('transform');
+          phoneBtn.style.removeProperty('z-index');
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared phone button inline positioning');
+        }
+      }
+    } else {
+      console.log('[Navbar] Could not parse background color:', bgColor);
+    }
+    
+    // MOBILE MENU TOGGLE
+    // Re-query in case DOM changed (mobileToggle already declared at top of function)
+    mobileToggle = document.getElementById('mobileToggle') ||
+                   document.querySelector('.mobile-toggle') ||
+                   document.querySelector('.hamburger') ||
+                   document.querySelector('.hamburger-menu') ||
+                   document.querySelector('.menu-toggle') ||
+                   document.querySelector('.burger-menu') ||
+                   document.querySelector('[aria-label="Menu"]') ||
+                   document.querySelector('[aria-label="תפריט"]');
+    
+    // EXPANDED SEARCH: Find nav menu by ID or class
+    const navMenu = document.getElementById('navMenu') ||
+                  document.querySelector('.nav-menu') ||
+                  document.querySelector('.nav-links') ||
+                  document.querySelector('nav ul:not(.submenu)');
+    
+    if (!mobileToggle || !navMenu) {
+      console.log('[Navbar] Mobile toggle or menu not found:', { toggle: !!mobileToggle, menu: !!navMenu });
+      return;
+    }
+    
+    // Ensure navMenu has ID for CSS targeting
+    if (!navMenu.id) {
+      navMenu.id = 'navMenu';
+    }
+    
+    console.log('[Navbar] Initializing mobile menu...');
+    
+    // Remove any existing event listeners by cloning the button
+    const newToggle = mobileToggle.cloneNode(true);
+    mobileToggle.parentNode.replaceChild(newToggle, mobileToggle);
+    
+    // Toggle menu on button click - use newToggle now
+    newToggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const hamburgerIcon = this.querySelector('.hamburger-icon');
+      const closeIcon = this.querySelector('.close-icon');
+      const isActive = navMenu.classList.contains('active');
+      
+      if (isActive) {
+        // Close menu
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed');
+      } else {
+        // Open menu
+        navMenu.classList.add('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'none', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'block', 'important');
+        document.body.style.overflow = 'hidden';
+        console.log('[Navbar] Menu opened');
+      }
+    });
+    
+    // Close menu when clicking nav links (but NOT dropdown toggles)
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        // Don't close if it's a dropdown child (unless it's a real navigation link)
+        if (this.getAttribute('href') === '#') return;
+        
+        const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+        const closeIcon = newToggle.querySelector('.close-icon');
+        
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed (link clicked)');
+      });
+    });
+    
+    // DROPDOWN MENU TOGGLE (for mobile and touch devices)
+    var dropdownToggles = navMenu.querySelectorAll('.dropdown-toggle');
+    dropdownToggles.forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var parent = this.closest('.nav-dropdown');
+        if (!parent) return;
+        
+        // Close other open dropdowns at the same level
+        var siblings = parent.parentNode.querySelectorAll('.nav-dropdown.open');
+        siblings.forEach(function(sib) {
+          if (sib !== parent) sib.classList.remove('open');
+        });
+        
+        parent.classList.toggle('open');
+        console.log('[Navbar] Dropdown toggled:', parent.classList.contains('open') ? 'open' : 'closed');
+      });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        var openDropdowns = document.querySelectorAll('.nav-dropdown.open');
+        openDropdowns.forEach(function(dd) { dd.classList.remove('open'); });
+      }
+    });
+    
+    console.log('[Navbar] Dropdown handlers initialized for ' + dropdownToggles.length + ' dropdowns');
+    
+    // Phone button functionality (phoneBtn already declared at top of function)
+    if (phoneBtn) {
+      phoneBtn.addEventListener('click', function() {
+        // Get phone number from placeholder in page or use default
+        const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+        const phoneNumber = phoneLinks.length > 0 
+          ? phoneLinks[0].getAttribute('href').replace('tel:', '')
+          : '[business_phone]';
+        
+        window.location.href = 'tel:' + phoneNumber;
+        console.log('[Navbar] Phone button clicked');
+      });
+    }
+    
+    console.log('[Navbar] Mobile menu initialized successfully');
+    
+    // === WHATSAPP BUTTON VISIBILITY FIX ===
+    // Ensure WhatsApp floating button is hidden on desktop and visible on mobile
+    // IMPORTANT: Only target the floating button by its class, NOT generic wa.me links
+    const handleWhatsAppVisibility = function() {
+      const whatsappBtn = document.querySelector('.whatsapp-float');
+      if (whatsappBtn) {
+        const isDesktop = window.innerWidth >= 769;
+        if (isDesktop) {
+          whatsappBtn.style.setProperty('display', 'none', 'important');
+          whatsappBtn.style.setProperty('visibility', 'hidden', 'important');
+          whatsappBtn.style.setProperty('opacity', '0', 'important');
+          whatsappBtn.style.setProperty('pointer-events', 'none', 'important');
+          console.log('[WhatsApp] Button hidden on desktop');
+        } else {
+          whatsappBtn.style.removeProperty('display');
+          whatsappBtn.style.removeProperty('visibility');
+          whatsappBtn.style.removeProperty('opacity');
+          whatsappBtn.style.removeProperty('pointer-events');
+          console.log('[WhatsApp] Button visible on mobile');
+        }
+      }
+    };
+    
+    // Run on load
+    handleWhatsAppVisibility();
+    
+    // Run on resize with debouncing
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(handleWhatsAppVisibility, 100);
+    });
+  });
+})();
+
+</script>
+  
+  <main>
+    <section class="about-profile-section" data-layout-spec="אודות-profile" dir="rtl">
+  <!-- Decorative dot grid -->
+  <div class="about-profile-dot-grid" aria-hidden="true"></div>
+
+  <div class="about-profile-container">
+    <!-- Text Column (START = RIGHT in RTL) -->
+    <div class="about-profile-text">
+      <div class="about-profile-label">רואה חשבון מוסמך</div>
+
+      <h1 class="about-profile-heading">
+        לירן —<br>רואה חשבון<br>שמדבר בשפה שלך
+      </h1>
+
+      <!-- Gold underline accent -->
+      <div class="about-profile-underline" aria-hidden="true"></div>
+
+      <p class="about-profile-intro">
+        שמי לירן, רואה חשבון מוסמך עם ניסיון של למעלה מעשור בליווי עצמאים, פרילנסרים ובעלי עסקים קטנים. אני מאמין שחשבונאות טובה היא לא רק ניירת ומספרים — היא כלי אסטרטגי שמאפשר לך לקבל החלטות בטוחות ולצמוח בביטחון. כרואה חשבון לעצמאים, אני מציע ליווי אישי, זמין ומותאם בדיוק לצרכים שלך.
+      </p>
+
+      <!-- Pull phrase -->
+      <blockquote class="about-profile-pull">
+        <span class="about-profile-pull-arc" aria-hidden="true">
+          <svg data-no-icon-edit="true" aria-hidden="true" width="120" height="60" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10,55 Q60,-10 110,55" stroke="#C46A4A" stroke-width="1.5" fill="none" opacity="0.18"></path>
+          </svg>
+        </span>
+        “חשבונאות לא חייבת להיות מסובכת — היא צריכה להיות ברורה, תומכת ומדויקת לעסק שלך.”
+      </blockquote>
+
+      <div class="about-profile-stats">
+        <div class="about-profile-stat">
+          <span class="about-profile-stat-number">10+</span>
+          <span class="about-profile-stat-label">שנות ניסיון</span>
+        </div>
+        <div class="about-profile-stat-divider" aria-hidden="true"></div>
+        <div class="about-profile-stat">
+          <span class="about-profile-stat-number">300+</span>
+          <span class="about-profile-stat-label">לקוחות מרוצים</span>
+        </div>
+        <div class="about-profile-stat-divider" aria-hidden="true"></div>
+        <div class="about-profile-stat">
+          <span class="about-profile-stat-number">100%</span>
+          <span class="about-profile-stat-label">שירות אישי</span>
+        </div>
+      </div>
+
+      <div class="about-profile-cta-row">
+        <a href="/contact" class="about-profile-btn-primary">בואו נדבר</a>
+        <a href="/services" class="about-profile-btn-secondary">השירותים שלי</a>
+      </div>
+    </div>
+
+    <!-- Portrait Column (END = LEFT in RTL) -->
+    <div class="about-profile-image-col">
+      <div class="about-profile-image-frame">
+        <div class="about-profile-image-bg-ring" aria-hidden="true"></div>
+        <img data-placeholder="about-profile-image-1" data-context="Professional portrait of Liran, a warm and approachable Israeli CPA accountant in his 30s-40s, wearing smart casual attire in neutral tones (cream/beige/navy), sitting at a light wooden desk with soft natural window light from the side. The background is a warm sand/cream color. Expression is calm, confident, and friendly — not stiff or corporate. Shallow depth of field, editorial feel, natural skin tones." width="520" height="640" src="/assets/site-about-profile-image-1.webp" alt="לירן, רואה חשבון מוסמך — פורטרט מקצועי" class="about-profile-portrait">
+        <!-- Decorative badge -->
+        <div class="about-profile-badge">
+          <span class="about-profile-badge-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+          <span class="about-profile-badge-text">רו"ח מוסמך ומורשה</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="about-story-section" data-layout-spec="אודות-story" dir="rtl">
+  <div class="about-story-container">
+
+    <!-- Section Header -->
+    <div class="about-story-header">
+      <div class="about-story-accent-line" aria-hidden="true"></div>
+      <h2 class="about-story-title">הסיפור מאחורי המשרד</h2>
+      <p class="about-story-lead">כיצד נבנתה פרקטיקה שמציבה את הלקוח — לא את הנייר — במרכז.</p>
+    </div>
+
+    <!-- Two-Column Narrative -->
+    <div class="about-story-columns">
+      <div class="about-story-col">
+        <p>לירן הקים את משרד רואה החשבון מתוך אמונה פשוטה: עצמאים ובעלי עסקים קטנים ראויים לאותה רמת שירות מקצועי שמקבלים חברות גדולות — רק בלי הבירוקרטיה ובלי הניכור. אחרי שנים של עבודה במשרדים גדולים, הגיע הרגע שבו ברור היה שהדרך הנכונה היא לבנות משהו אחר: מקום שבו כל לקוח מכיר את האיש שמטפל בו, ויודע שיש מי שמסתכל על התמונה הגדולה.</p>
+        <p>היום, המשרד מלווה עצמאים, פרילנסרים ובעלי עסקים בכל שלבי הדרך — מפתיחת תיק ועד הגשת דוח שנתי לעצמאי, ייעוץ מס שוטף ותכנון פיננסי לטווח ארוך. כל לקוח מקבל זמינות אמיתית, שפה ברורה, ותחושה שמישהו באמת מבין את העסק שלו.</p>
+      </div>
+      <div class="about-story-col">
+        <p>אחריות אישית היא לא סיסמה — היא הדרך שבה המשרד עובד. כשמגיע מועד הגשה, כשצצה שאלה מול רשות המסים, כשצריך להחליט אם להתאגד — לירן זמין, נוכח ומעורב. לא מזכירה, לא עוזר. האיש שחתם על הדוח שלך הוא אותו אדם שאפשר להתקשר אליו.</p>
+        <p>הגישה הזו בנתה קשרים ארוכי טווח עם לקוחות שמרגישים שיש להם שותף פיננסי — לא רק נותן שירות. לקוחות רבים מגיעים דרך המלצות, כי הם יודעים שמה שקיבלו הם לא רק דוחות מסודרים, אלא שקט נפשי אמיתי. זה הדבר שלירן בנה, וזה הדבר שהוא ממשיך להגן עליו בכל לקוח חדש.</p>
+      </div>
+    </div>
+
+    <!-- Separator -->
+    <div class="about-story-separator" aria-hidden="true">
+      <span class="about-story-separator-line"></span>
+      <span class="about-story-separator-icon">
+        <svg data-no-icon-edit="true" aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="3" fill="var(--accent)"></circle>
+          <circle cx="10" cy="10" r="6" stroke="var(--accent)" stroke-width="1.5" fill="none" opacity="0.4"></circle>
+        </svg>
+      </span>
+      <span class="about-story-separator-line"></span>
+    </div>
+
+    <!-- Image Strip -->
+    <div class="about-story-image-strip">
+      <figure class="about-story-figure about-story-figure--wide">
+        <img data-placeholder="about-story-image-1" data-context="A warm, professional scene of an Israeli CPA accountant reviewing financial documents at a clean wooden desk. Soft natural light from a side window, organized papers and a laptop open to a spreadsheet, a cup of coffee nearby. Calm, editorial atmosphere conveying trust and expertise. Earthy warm tones, no clutter." width="720" height="400" src="/assets/site-about-story-image-1.webp" alt="לירן רואה חשבון סוקר מסמכים פיננסיים במשרד">
+        <figcaption class="about-story-figcaption">עבודה מדוקדקת, כל יום</figcaption>
+      </figure>
+      <figure class="about-story-figure about-story-figure--narrow">
+        <img data-placeholder="about-story-image-2" data-context="A warm, candid moment of an Israeli accountant having a professional consultation with a small business client. Both seated across a desk, the accountant pointing to a document and explaining clearly. Relaxed but professional setting, soft indoor lighting, plants in background, modern minimal office decor. Warm earthy color palette." width="480" height="400" src="/assets/site-about-story-image-2.webp" alt="פגישת ייעוץ מס עם לקוח עצמאי">
+        <figcaption class="about-story-figcaption">ליווי אישי בכל שלב</figcaption>
+      </figure>
+    </div>
+
+  </div>
+
+  <!-- Decorative dot grid -->
+  <div class="about-story-dot-grid" aria-hidden="true"></div>
+
+</section>
+
+<section class="about-values-section" dir="rtl" data-layout-spec="אודות-values">
+  <div class="about-values-container">
+    <div class="about-values-header">
+      <h2 class="about-values-title">הערכים שמנחים אותנו</h2>
+      <p class="about-values-subtitle">בכל פגישה, בכל דוח, בכל החלטה פיננסית — אנחנו פועלים לפי עקרונות ברורים שמעמידים את הלקוח במרכז</p>
+    </div>
+    <div class="about-values-grid">
+      <article class="about-values-card">
+        <div class="about-values-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" fill="none"></circle>
+            <path d="M13 20l5 5 9-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <h3 class="about-values-card-title">אמינות ושקיפות</h3>
+        <p class="about-values-card-text">אנחנו מאמינים שהיחסים הטובים ביותר בין רואה חשבון ללקוח בנויים על אמון אמיתי. תמיד תדעו מה קורה עם הכספים שלכם, בלי הפתעות ובלי שפה מקצועית מסורבלת — רק מידע ברור ומדויק שמאפשר לכם לקבל החלטות בביטחון.</p>
+      </article>
+      <article class="about-values-card about-values-card--featured">
+        <div class="about-values-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M20 6L8 13v8c0 7.18 5.16 13.88 12 15.5C27.84 34.88 33 28.18 33 21v-8L20 6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"></path>
+            <path d="M15 20.5l3.5 3.5 7-7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <h3 class="about-values-card-title">בהירות פיננסית</h3>
+        <p class="about-values-card-text">כרואה חשבון לעצמאים ופרילנסרים, אנחנו מתרגמים את המורכבות הפיננסית לשפה פשוטה ומובנת. הגשת דוח שנתי לעצמאי, ניהול ספרים, ייעוץ מס — כל אלה הופכים לתהליכים ברורים ומסודרים שאתם שולטים בהם לחלוטין.</p>
+        <div class="about-values-featured-accent" aria-hidden="true"></div>
+      </article>
+      <article class="about-values-card">
+        <div class="about-values-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M8 32V20M16 32V14M24 32V18M32 32V10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></path>
+            <circle cx="32" cy="8" r="2" fill="currentColor"></circle>
+            <path d="M8 20c4-4 8 2 12-2s8-6 12-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"></path>
+          </svg>
+        </div>
+        <h3 class="about-values-card-title">שותפות לטווח ארוך</h3>
+        <p class="about-values-card-text">אנחנו לא רק מגישים טפסים — אנחנו מלווים את הצמיחה שלכם לאורך זמן. מהרגע שבו פתחתם עסק ועד לשלב הבא, אנחנו כאן עם ייעוץ מס לפרילנסרים, תכנון פיננסי ותמיכה שוטפת שמאפשרת לכם להתמקד במה שאתם הכי טובים בו.</p>
+      </article>
+    </div>
+  </div>
+  <div class="about-values-dot-grid" aria-hidden="true"></div>
+</section>
+
+<section class="about-credentials-section" data-layout-spec="אודות-credentials" dir="rtl">
+  <div class="about-credentials-container">
+
+    <!-- Section Header -->
+    <div class="about-credentials-header">
+      <h2 class="about-credentials-title">הכשרה, ניסיון ומחויבות מקצועית</h2>
+      <div class="about-credentials-brass-line" aria-hidden="true"></div>
+      <p class="about-credentials-subtitle">רואה חשבון לעצמאים ובעלי עסקים — עם הידע הטכני, הדיוק המספרי והנגישות האנושית שאתם צריכים.</p>
+    </div>
+
+    <!-- Two-Column Content -->
+    <div class="about-credentials-columns">
+
+      <!-- Column 1: Qualifications & Experience -->
+      <div class="about-credentials-col about-credentials-col--qualifications">
+        <div class="about-credentials-col-label">כישורים וניסיון</div>
+
+        <div class="about-credentials-block">
+          <div class="about-credentials-block-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+          </div>
+          <div class="about-credentials-block-content">
+            <h3 class="about-credentials-block-title">רואה חשבון מוסמך (CPA)</h3>
+            <p class="about-credentials-block-text">בוגר לימודי חשבונאות ומחזיק רישיון רואה חשבון מוסמך מטעם לשכת רואי החשבון בישראל.</p>
+          </div>
+        </div>
+
+        <div class="about-credentials-divider-thin" aria-hidden="true"></div>
+
+        <div class="about-credentials-block">
+          <div class="about-credentials-block-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          </div>
+          <div class="about-credentials-block-content">
+            <h3 class="about-credentials-block-title">מעל 12 שנות ניסיון מקצועי</h3>
+            <p class="about-credentials-block-text">ניסיון מצטבר עם עצמאים, פרילנסרים ועסקים קטנים ובינוניים — לרבות הגשת דוח שנתי לעצמאי בכל הענפים.</p>
+          </div>
+        </div>
+
+        <div class="about-credentials-divider-thin" aria-hidden="true"></div>
+
+        <div class="about-credentials-block">
+          <div class="about-credentials-block-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          </div>
+          <div class="about-credentials-block-content">
+            <h3 class="about-credentials-block-title">בקיאות בדיני המס הישראלי</h3>
+            <p class="about-credentials-block-text">עדכון שוטף עם תקנות רשות המסים, ייעוץ מס לפרילנסרים ובעלי עסקים — תוך מקסום ההטבות החוקיות.</p>
+          </div>
+        </div>
+
+        <div class="about-credentials-divider-thin" aria-hidden="true"></div>
+
+        <div class="about-credentials-block">
+          <div class="about-credentials-block-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+          <div class="about-credentials-block-content">
+            <h3 class="about-credentials-block-title">זמינות ומענה מהיר</h3>
+            <p class="about-credentials-block-text">מחויבות לזמינות אמיתית — לא תיתקלו בתור ממתינים. כל לקוח מקבל מענה אישי בתוך 24 שעות.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Vertical Brass Separator -->
+      <div class="about-credentials-vertical-line" aria-hidden="true"></div>
+
+      <!-- Column 2: Service Approach -->
+      <div class="about-credentials-col about-credentials-col--approach">
+        <div class="about-credentials-col-label">גישה ועקרונות עבודה</div>
+
+        <div class="about-credentials-approach-block">
+          <h3 class="about-credentials-approach-title">דיוק ללא פשרות</h3>
+          <p class="about-credentials-approach-text">כל דוח, כל הצהרה, כל פרט — נבדקים ביסודיות לפני הגשה. הדיוק המספרי הוא לא רק מקצועיות, הוא חובה אתית שאני נושא בה כלפי כל לקוח.</p>
+        </div>
+
+        <div class="about-credentials-approach-block">
+          <h3 class="about-credentials-approach-title">שקיפות ויושרה מלאה</h3>
+          <p class="about-credentials-approach-text">אני מאמין בתקשורת ישירה וברורה. לא תקבלו הפתעות בחשבון, ולא תשמעו ז'רגון מסובך — רק הסברים פשוטים ומדויקים על מה שקורה עם הכספים שלכם.</p>
+        </div>
+
+        <div class="about-credentials-approach-block">
+          <h3 class="about-credentials-approach-title">ליווי לאורך כל השנה</h3>
+          <p class="about-credentials-approach-text">השירות שלי לא מסתיים בהגשת הדוח השנתי. אני כאן לאורך כל השנה — לשאלות, לתכנון מס, לשינויים בעסק ולכל אתגר פיננסי שעולה.</p>
+        </div>
+
+        <div class="about-credentials-approach-block">
+          <h3 class="about-credentials-approach-title">התאמה אישית לכל לקוח</h3>
+          <p class="about-credentials-approach-text">עצמאי בתחילת דרכו שונה מבעל עסק ותיק. אני מתאים את הגישה, את הכלים ואת תדירות הדיווח לפי הצרכים הספציפיים של כל לקוח — בלי פתרונות גנריים.</p>
+        </div>
+
+        <!-- Accent quote block -->
+        <div class="about-credentials-quote">
+          <div class="about-credentials-quote-line" aria-hidden="true"></div>
+          <p class="about-credentials-quote-text">"הלקוח שלי לא צריך להיות רואה חשבון — הוא צריך לסמוך על אחד."</p>
+          <span class="about-credentials-quote-attr">לירן, רואה חשבון מוסמך</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="about-reviews-section" data-layout-spec="אודות-reviews" dir="rtl">
+  <div class="about-reviews-container">
+
+    <div class="about-reviews-header">
+      <h2 class="about-reviews-title">מה אומרים עלינו הלקוחות</h2>
+      <div class="about-reviews-accent-line" aria-hidden="true"></div>
+      <p class="about-reviews-subtitle">חוויות אמיתיות של עצמאים ובעלי עסקים קטנים שמצאו שקט נפשי עם ליווי מקצועי</p>
+    </div>
+
+    <div class="about-reviews-grid">
+
+      <article class="about-review-panel">
+        <div class="about-review-quote-mark" aria-hidden="true">
+          <svg data-no-icon-edit="true" aria-hidden="true" width="40" height="32" viewBox="0 0 40 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 32V20C0 13.333 2.333 7.667 7 3L11 6C8.333 9 7 12.333 7 16H14V32H0ZM22 32V20C22 13.333 24.333 7.667 29 3L33 6C30.333 9 29 12.333 29 16H36V32H22Z" fill="currentColor" opacity="0.18"></path>
+          </svg>
+        </div>
+        <blockquote class="about-review-quote">
+          <p>לפני שפגשתי את לירן, הגשת הדוח השנתי הייתה עבורי מקור חרדה אמיתי. לא הבנתי מה אני חייב, לא ידעתי אם אני מפספס ניכויים, ופחדתי מהשומות. מאז שלירן מלווה אותי, אני פשוט שולח לו את המסמכים ויודע שהכל מטופל. הוא מסביר לי בשפה פשוטה, זמין לשאלות, ותמיד מוצא דרכים חוקיות לחסוך. זה שינה לי לגמרי את היחס לצד הפיננסי של העסק.</p>
+        </blockquote>
+        <footer class="about-review-attribution">
+          <div class="about-review-avatar" aria-hidden="true">
+            <span class="about-review-avatar-initials">א.כ</span>
+          </div>
+          <div class="about-review-author-info">
+            <cite class="about-review-author-name">אבי כהן</cite>
+            <span class="about-review-author-role">מעצב גרפי עצמאי, תל אביב</span>
+            <div class="about-review-stars" aria-label="דירוג 5 כוכבים">
+              <span aria-hidden="true">★★★★★</span>
+            </div>
+          </div>
+        </footer>
+      </article>
+
+      <article class="about-review-panel">
+        <div class="about-review-quote-mark" aria-hidden="true">
+          <svg data-no-icon-edit="true" aria-hidden="true" width="40" height="32" viewBox="0 0 40 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 32V20C0 13.333 2.333 7.667 7 3L11 6C8.333 9 7 12.333 7 16H14V32H0ZM22 32V20C22 13.333 24.333 7.667 29 3L33 6C30.333 9 29 12.333 29 16H36V32H22Z" fill="currentColor" opacity="0.18"></path>
+          </svg>
+        </div>
+        <blockquote class="about-review-quote">
+          <p>התחלתי לעבוד עם לירן כשפתחתי את העסק שלי כפרילנסרית בתחום השיווק. הוא עזר לי להבין את ההבדלים בין מבני עסק שונים, הכווין אותי בנושא מע״מ ומקדמות מס, ועזר לי לבנות תזרים מסודר. מה שהפתיע אותי הכי הרבה זה שהוא לא רק מגיש דוחות — הוא באמת מעוניין שהעסק שלי יצליח. אני מרגישה שיש לי שותף אמיתי לדרך, לא רק רואה חשבון.</p>
+        </blockquote>
+        <footer class="about-review-attribution">
+          <div class="about-review-avatar" aria-hidden="true">
+            <span class="about-review-avatar-initials">נ.ל</span>
+          </div>
+          <div class="about-review-author-info">
+            <cite class="about-review-author-name">נועה לוי</cite>
+            <span class="about-review-author-role">יועצת שיווק דיגיטלי עצמאית, חיפה</span>
+            <div class="about-review-stars" aria-label="דירוג 5 כוכבים">
+              <span aria-hidden="true">★★★★★</span>
+            </div>
+          </div>
+        </footer>
+      </article>
+
+    </div>
+
+    <div class="about-reviews-cta-area">
+      <div class="about-reviews-divider-line" aria-hidden="true"></div>
+      <p class="about-reviews-cta-text">רוצה גם אתה ייעוץ מס לפרילנסרים שמתאים בדיוק לצרכים שלך?</p>
+      <a href="/contact" class="about-reviews-cta-btn btn-primary">
+        <span>בואו נדבר</span>
+        <svg data-element-type="icon" data-icon-type="svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </a>
+    </div>
+
+  </div>
+</section>
+  </main>
+  
+  <footer class="site-footer" dir="rtl">
+  <div class="footer-main">
+    <div class="footer-container">
+      <div class="footer-grid">
+
+        <!-- Company Info -->
+        <div class="footer-col footer-col--brand">
+          <div class="footer-logo-wrap">
+            <img src="/assets/logo.webp" alt="לירן - רואה חשבון" class="logo" />
+          </div>
+          <p class="footer-tagline">ליווי פיננסי מקצועי, אישי וברור — כי כל עסק ראוי להבין את המספרים שלו.</p>
+          <div class="footer-social">
+            <a href="[facebook_handle]" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="[instagram_handle]" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="[whatsapp_handle]" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-col">
+          <h3 class="footer-heading">ניווט מהיר</h3>
+          <ul class="footer-links">
+            <li><a href="/services">שירותים</a></li>
+            <li><a href="/about">אודות</a></li>
+            <li><a href="/contact">צור קשר</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="footer-col">
+          <h3 class="footer-heading">יצירת קשר</h3>
+          <ul class="footer-contact">
+            <li>
+              <span class="contact-icon"><i class="fas fa-envelope"></i></span>
+              <span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span>
+            </li>
+            <li>
+              <span class="contact-icon"><i class="fas fa-phone"></i></span>
+              <span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span>
+            </li>
+            <li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
+              <span class="contact-text">[business_address]</span></a></li>
+          </ul>
+        </div>
+
+        <!-- Working Hours / Extra Col -->
+        <div class="footer-col">
+          <h3 class="footer-heading">שעות פעילות</h3>
+          <ul class="footer-hours">
+            <li><a href="/"><span class="hours-day">ראשון – חמישי</span><span class="hours-time">09:00 – 18:00</span></a></li>
+            <li><a href="/"><span class="hours-day">שישי</span><span class="hours-time">09:00 – 13:00</span></a></li>
+            <li><a href="/"><span class="hours-day">שבת</span><span class="hours-time">סגור</span></a></li>
+          </ul>
+          <div class="footer-cta-wrap">
+            <a href="/contact" class="footer-cta-btn">קבע פגישה</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="footer-bottom">
+    <div class="footer-container footer-bottom-inner">
+      <p class="footer-copyright">© 2026 לירן - רואה חשבון. כל הזכויות שמורות.</p>
+      <div class="footer-legal">
+        <a href="/privacy">מדיניות פרטיות</a>
+        <span class="footer-sep" aria-hidden="true">·</span>
+        <a href="/terms">תנאי שימוש</a>
+        <span class="footer-sep" aria-hidden="true">·</span>
+        <a href="/accessibility">נגישות</a>
+        <span class="footer-sep" aria-hidden="true">·</span>
+        <a href="https://zappy5.com" target="_blank" class="zappy-attribution">נוצר באמצעות Zappy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+  
+  <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <div data-integration="accessibility:toolbar"></div>
+
+    <script src="/script.js"></script>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+</body>
+</html>
